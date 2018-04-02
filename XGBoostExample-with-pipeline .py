@@ -18,6 +18,8 @@ from sklearn.preprocessing import Imputer
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 
+#train-Test split(75% - 25%)
+#NEVER IMPUTE BEFORE SPLITTING => PREVENT DATA LEAKAGE
 train_X, test_X, train_y, test_y = train_test_split(X.as_matrix(), y.as_matrix(), test_size=0.25)
 
 #pipeline
@@ -26,5 +28,10 @@ my_pipeline.fit(train_X, train_y)
 predictions = my_pipeline.predict(test_X)
 
 from sklearn.metrics import mean_absolute_error
-
 print("Mean Absolute Error : " + str(mean_absolute_error(predictions, test_y)))
+
+#cross validation
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(my_pipeline, X, y, scoring='neg_mean_absolute_error')
+print("Cross validated MAE => " + str(scores))
+
