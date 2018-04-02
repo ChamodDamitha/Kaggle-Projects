@@ -26,18 +26,21 @@ from xgboost import XGBRegressor
 # Add silent=True to avoid printing out updates with each cycle
 #my_model.fit(train_X, train_y, verbose=False)
 
-#model tuning
-#my_model = XGBRegressor(n_estimators=1000)
+from sklearn.metrics import mean_absolute_error
+
+def getMAE(est) :
+	#model tuning
+	#my_model = XGBRegressor(n_estimators=est)
              
-#add learning rate
-my_model = XGBRegressor(n_estimators=1000, learning_rate=0.05)
-my_model.fit(train_X, train_y, early_stopping_rounds=5, 
+	#add learning rate
+	my_model = XGBRegressor(n_estimators=est, learning_rate=0.05)
+	my_model.fit(train_X, train_y, early_stopping_rounds=5, 
              eval_set=[(test_X, test_y)], verbose=False)
 
 
-# make predictions
-predictions = my_model.predict(test_X)
+	# make predictions
+	predictions = my_model.predict(test_X)
+	print("estimators = " + str(est) +" Mean Absolute Error : " + str(mean_absolute_error(predictions, test_y)))
 
-from sklearn.metrics import mean_absolute_error
-print("Mean Absolute Error : " + str(mean_absolute_error(predictions, test_y)))
-
+for i in range(100, 2001, 200):
+	getMAE(i) 
